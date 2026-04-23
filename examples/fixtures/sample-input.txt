@@ -1,0 +1,9 @@
+Chandra TS Test Fixture
+
+This is a lightweight sample input file for tester scenarios.
+
+Expected usage notes:
+- In remote mode, point CHANDRA_BASE_URL to a running bridge/server.
+- In local mode, ensure the managed runtime has been set up and the bridge can start.
+
+The current bridge implementation expects real Chandra for OCR-capable formats, so this text file is mainly useful to exercise request routing, error handling, and end-to-end control flow during development.
