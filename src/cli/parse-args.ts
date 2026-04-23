@@ -1,5 +1,5 @@
 export type CliArgs = {
-  command: "process" | "health" | "info" | "setup";
+  command: "process" | "health" | "info" | "setup" | "doctor" | "warmup";
   input?: string;
   output?: string;
   baseUrl?: string;
@@ -18,6 +18,14 @@ export function parseArgs(argv: string[]): CliArgs {
 
   if (args[0] === "setup") {
     return { command: "setup" };
+  }
+
+  if (args[0] === "doctor") {
+    return { command: "doctor" };
+  }
+
+  if (args[0] === "warmup") {
+    return { command: "warmup" };
   }
 
   return {

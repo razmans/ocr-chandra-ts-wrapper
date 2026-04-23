@@ -37,6 +37,8 @@ export type ProcessFileOptions = {
   maxOutputTokens?: number;
   batchSize?: number;
   maxWorkers?: number;
+  method?: "hf" | "vllm";
+  maxRetries?: number;
   metadata?: Record<string, unknown>;
 };
 
@@ -173,3 +175,5 @@ export type BridgeErrorResponse = {
   ok: false;
   error: ChandraErrorShape;
 };
+
+export type BridgeProcessResponse = BridgeProcessSuccessResponse | BridgeErrorResponse;

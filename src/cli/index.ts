@@ -4,6 +4,8 @@ import { ChandraClient } from "../client.js";
 import { parseArgs } from "./parse-args.js";
 import { formatHealth } from "./format-output.js";
 import { runSetup } from "./setup.js";
+import { runDoctor } from "./doctor.js";
+import { runWarmup } from "./warmup.js";
 
 async function main(): Promise<void> {
   const args = parseArgs(process.argv);
@@ -23,6 +25,16 @@ async function main(): Promise<void> {
 
   if (args.command === "setup") {
     await runSetup();
+    return;
+  }
+
+  if (args.command === "doctor") {
+    await runDoctor();
+    return;
+  }
+
+  if (args.command === "warmup") {
+    await runWarmup();
     return;
   }
 

@@ -2,6 +2,8 @@
 
 TypeScript wrapper and local auto-runtime client for Chandra OCR.
 
+> Recommended production usage: **remote/server mode via `baseUrl`**. Local mode is supported, but should be treated as an explicit managed-runtime path with setup/doctor/warmup steps.
+
 ## Planned behavior
 
 - If `baseUrl` is provided, use that Chandra/bridge server directly
@@ -62,6 +64,8 @@ npx chandra-ts input.pdf ./output
 npx chandra-ts health
 npx chandra-ts info
 npx chandra-ts setup
+npx chandra-ts doctor
+npx chandra-ts warmup
 ```
 
 ## Managed local runtime
@@ -88,8 +92,10 @@ If that package is missing, `npm run setup:local` will fail with a guided error 
 ## Recommended user model
 
 - **Use `baseUrl`** if you already have a Chandra bridge/server
+- **Treat remote/server mode as the primary production path**
 - **Use `npm run setup:local`** if you want a managed local runtime
-- later, the wrapper can be extended to lazily bootstrap local runtime on first use
+- Run `npx chandra-ts doctor` before depending on local mode
+- Run `npx chandra-ts warmup` before the first meaningful local OCR run
 
 ## Tester scenario
 
