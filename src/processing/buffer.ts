@@ -1,5 +1,6 @@
-import type { ProcessBufferOptions, ResolvedBackendInfo, BridgeProcessSuccessResponse } from "../types.js";
+import type { ProcessBufferOptions, ResolvedBackendInfo, BridgeProcessResponse, BridgeProcessSuccessResponse } from "../types.js";
 import { HttpClient } from "../backend/http-client.js";
+import { expectBridgeSuccess } from "../backend/bridge-response.js";
 
 export async function processBufferRequest(
   backend: ResolvedBackendInfo,
@@ -14,5 +15,6 @@ export async function processBufferRequest(
   if (options?.filename) {
     formData.append("filename", options.filename);
   }
-  return http.postMultipart<BridgeProcessSuccessResponse>("/process/upload", formData);
+  const response = await http.postMultipart<BridgeProcessResponse>("/process/upload", formData);
+  return expectBridgeSuccess(response);
 }

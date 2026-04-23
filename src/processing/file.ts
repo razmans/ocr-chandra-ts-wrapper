@@ -1,5 +1,6 @@
-import type { ProcessFileOptions, ResolvedBackendInfo, BridgeProcessSuccessResponse } from "../types.js";
+import type { ProcessFileOptions, ResolvedBackendInfo, BridgeProcessResponse, BridgeProcessSuccessResponse } from "../types.js";
 import { HttpClient } from "../backend/http-client.js";
+import { expectBridgeSuccess } from "../backend/bridge-response.js";
 
 export async function processFileRequest(
   backend: ResolvedBackendInfo,
@@ -7,8 +8,9 @@ export async function processFileRequest(
   options?: ProcessFileOptions
 ): Promise<BridgeProcessSuccessResponse> {
   const http = new HttpClient(backend.baseUrl);
-  return http.postJson<BridgeProcessSuccessResponse>("/process/file", {
+  const response = await http.postJson<BridgeProcessResponse>("/process/file", {
     inputPath,
     options
   });
+  return expectBridgeSuccess(response);
 }

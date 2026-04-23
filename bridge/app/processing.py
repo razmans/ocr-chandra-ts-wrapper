@@ -68,7 +68,11 @@ def _collect_output_files(output_dir: Path) -> dict[str, Any]:
 def _build_chandra_command(input_path: Path, output_dir: Path, options: dict[str, Any]) -> list[str]:
     command = ["chandra", str(input_path), str(output_dir)]
 
-    page_range = options.get("pageRange")
+    method = options.get("method")
+    if method:
+        command.extend(["--method", str(method)])
+
+    page_range = options.get("pageRange") or "1"
     if page_range:
         command.extend(["--page-range", str(page_range)])
 
@@ -95,6 +99,10 @@ def _build_chandra_command(input_path: Path, output_dir: Path, options: dict[str
     max_workers = options.get("maxWorkers")
     if max_workers:
         command.extend(["--max-workers", str(max_workers)])
+
+    max_retries = options.get("maxRetries")
+    if max_retries:
+        command.extend(["--max-retries", str(max_retries)])
 
     return command
 

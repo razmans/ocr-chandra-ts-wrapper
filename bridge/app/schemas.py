@@ -11,6 +11,8 @@ class ProcessOptions(BaseModel):
     maxOutputTokens: int | None = None
     batchSize: int | None = None
     maxWorkers: int | None = None
+    method: str | None = None
+    maxRetries: int | None = None
     metadata: dict[str, Any] | None = None
 
 
