@@ -30,6 +30,13 @@ export class ChandraClient {
     return this.resolver.resolve();
   }
 
+  async ensureRemoteReady(): Promise<ResolvedBackendInfo> {
+    if (!this.config.baseUrl) {
+      throw toChandraError(new Error("Remote mode requires baseUrl."), "INVALID_CONFIG");
+    }
+    return this.resolver.resolve();
+  }
+
   async healthCheck(): Promise<ChandraHealthStatus> {
     const baseUrl = this.config.baseUrl ?? `http://${this.config.localHost}:${this.config.localPort}`;
     return probeHealth(baseUrl);
@@ -38,8 +45,9 @@ export class ChandraClient {
   async processFile(inputPath: string, options: ProcessFileOptions = {}): Promise<ChandraDocumentResult> {
     try {
       const backend = await this.ensureReady();
-      const response = await processFileRequest(backend, inputPath, options);
-      return normalizeProcessResult(response, backend, buildFileInputContext(inputPath, options));
+      const effectiveOptions = this.applyLocalDefaults(options, backend);
+      const response = await processFileRequest(backend, inputPath, effectiveOptions);
+      return normalizeProcessResult(response, backend, buildFileInputContext(inputPath, effectiveOptions));
     } catch (error) {
       throw toChandraError(error, "PROCESSING_FAILED");
     }
@@ -48,8 +56,9 @@ export class ChandraClient {
   async processBuffer(input: Buffer, options: ProcessBufferOptions = {}): Promise<ChandraDocumentResult> {
     try {
       const backend = await this.ensureReady();
-      const response = await processBufferRequest(backend, input, options);
-      return normalizeProcessResult(response, backend, buildBufferInputContext(options));
+      const effectiveOptions = this.applyLocalDefaults(options, backend);
+      const response = await processBufferRequest(backend, input, effectiveOptions);
+      return normalizeProcessResult(response, backend, buildBufferInputContext(effectiveOptions));
     } catch (error) {
       throw toChandraError(error, "PROCESSING_FAILED");
     }
@@ -61,5 +70,24 @@ export class ChandraClient {
 
   async shutdown(): Promise<void> {
     await this.resolver.shutdownOwnedBackend();
+  }
+
+  private applyLocalDefaults<T extends ProcessFileOptions | ProcessBufferOptions>(
+    options: T,
+    backend: ResolvedBackendInfo
+  ): T {
+    if (backend.mode === "remote") {
+      return options;
+    }
+
+    return {
+      includeImages: options.includeImages ?? false,
+      includeHeadersFooters: options.includeHeadersFooters ?? false,
+      pageRange: options.pageRange ?? "1",
+      method: options.method ?? "hf",
+      batchSize: options.batchSize ?? 1,
+      maxRetries: options.maxRetries ?? 1,
+      ...options
+    };
   }
 }

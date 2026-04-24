@@ -39,7 +39,7 @@ async function main(): Promise<void> {
   }
 
   if (!args.input || !args.output) {
-    throw new Error("Usage: chandra-ts <input> <output> [--base-url <url>]");
+    throw new Error("Usage: chandra-ts <input> <output> [--base-url <url>]\nRecommended production mode: pass --base-url to a running Chandra server.");
   }
 
   await mkdir(args.output, { recursive: true });

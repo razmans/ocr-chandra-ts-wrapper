@@ -1,7 +1,7 @@
 {
   "name": "chandra-ts",
   "version": "0.1.0",
-  "description": "TypeScript wrapper and auto-runtime client for Chandra OCR.",
+  "description": "TypeScript SDK/client for Chandra OCR with optional local managed runtime tools.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,9 @@
     "clean": "rm -rf dist",
     "dev": "tsx src/cli/index.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "setup:local": "npm run build && node scripts/setup-local-runtime.mjs"
+    "setup:local": "npm run build && node scripts/setup-local-runtime.mjs",
+    "doctor": "npm run build && node dist/cli/index.js doctor",
+    "warmup": "npm run build && node dist/cli/index.js warmup"
   },
   "keywords": [
     "ocr",
